@@ -9,12 +9,10 @@ def db_query(db, sql, params):
         # create Dictionary Cursor 
         with conn.cursor() as cursor: 
             sql_query = sql 
-            
             # excute SQL 
             cursor.execute(sql_query, params) 
             rows = cursor.fetchall()
             return rows
-
         conn.commit()
         
     finally: 
@@ -46,3 +44,19 @@ def unique_sort(df, colnm, boolean, uniquenm, keep_param):
     unique_df = df.drop_duplicates([uniquenm], keep=keep_param)
     return unique_df
 
+
+# SQL function - Sample usage
+def sample(items, odcd):
+    samdb = "SELECT * FROM SAMPLE where customID IN ('" + str(items) + "') AND ODCD REGEXP '" + str(odcd) + "'"
+    print(samdb)
+    samdb_df = qy.query_executor(samdb)
+        
+    print("Extraction done.")
+    print("SAMPLE DB: " + str(samdb_df.shape))
+    
+    return samdb_df
+
+items = item_in(samplefile["seq"].tolist())
+odcd = item_regexp(samplefile["odcd"].tolist())
+
+sample_sql = sample(items, odcd)
